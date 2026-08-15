@@ -1,23 +1,17 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useCallback } from "react";
 import {
   Button,
   Chip,
   Grid,
   IconButton,
-  InputAdornment,
   makeStyles,
   Paper,
-  TextField,
   Typography,
   Modal,
-  Slider,
   FormControlLabel,
-  FormGroup,
-  MenuItem,
   Checkbox,
   Avatar,
 } from "@material-ui/core";
-import { useParams } from "react-router-dom";
 import Rating from "@material-ui/lab/Rating";
 import axios from "axios";
 import FilterListIcon from "@material-ui/icons/FilterList";
@@ -447,16 +441,6 @@ const ApplicationTile = (props) => {
     setOpenEndJob(false);
   };
 
-  const colorSet = {
-    applied: "#3454D1",
-    shortlisted: "#DC851F",
-    accepted: "#09BC8A",
-    rejected: "#D1345B",
-    deleted: "#B49A67",
-    cancelled: "#FF8484",
-    finished: "#4EA5D9",
-  };
-
   const getResume = () => {
     if (
       application.jobApplicant.resume &&
@@ -712,11 +696,7 @@ const AcceptedApplicants = (props) => {
     },
   });
 
-  useEffect(() => {
-    getData();
-  }, []);
-
-  const getData = () => {
+  const getData = useCallback(() => {
     let searchParams = [];
     searchParams = [...searchParams, `status=accepted`];
 
@@ -756,7 +736,6 @@ const AcceptedApplicants = (props) => {
       })
       .catch((err) => {
         console.log(err.response);
-        // console.log(err.response.data);
         setApplications([]);
         setPopup({
           open: true,
@@ -764,7 +743,11 @@ const AcceptedApplicants = (props) => {
           message: err.response.data.message,
         });
       });
-  };
+  }, [searchOptions, setPopup]);
+
+  useEffect(() => {
+    getData();
+  }, [getData]);
 
   return (
     <>

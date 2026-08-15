@@ -1,19 +1,14 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useCallback } from "react";
 import {
   Button,
   Chip,
   Grid,
   IconButton,
-  InputAdornment,
   makeStyles,
   Paper,
-  TextField,
   Typography,
   Modal,
-  Slider,
   FormControlLabel,
-  FormGroup,
-  MenuItem,
   Checkbox,
   Avatar,
 } from "@material-ui/core";
@@ -663,11 +658,7 @@ const JobApplications = (props) => {
     },
   });
 
-  useEffect(() => {
-    getData();
-  }, []);
-
-  const getData = () => {
+  const getData = useCallback(() => {
     let searchParams = [];
 
     if (searchOptions.status.rejected) {
@@ -715,7 +706,6 @@ const JobApplications = (props) => {
       })
       .catch((err) => {
         console.log(err.response);
-        // console.log(err.response.data);
         setApplications([]);
         setPopup({
           open: true,
@@ -723,7 +713,11 @@ const JobApplications = (props) => {
           message: err.response.data.message,
         });
       });
-  };
+  }, [searchOptions, jobId, setPopup]);
+
+  useEffect(() => {
+    getData();
+  }, [getData]);
 
   return (
     <>
