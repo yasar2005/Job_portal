@@ -15,6 +15,7 @@ import MyJobs from "./component/recruiter/MyJobs";
 import JobApplications from "./component/recruiter/JobApplications";
 import AcceptedApplicants from "./component/recruiter/AcceptedApplicants";
 import RecruiterProfile from "./component/recruiter/Profile";
+import RecruiterDashboard from "./component/recruiter/Dashboard";
 import SavedJobs from "./component/SavedJobs";
 import MessagePopup from "./lib/MessagePopup";
 import isAuth, { userType } from "./lib/isAuth";
@@ -62,7 +63,9 @@ function App() {
                 <Route exact path="/login"><Login /></Route>
                 <Route exact path="/signup"><Signup /></Route>
                 <Route exact path="/logout"><Logout /></Route>
-                <Route exact path="/home"><Home /></Route>
+                <Route exact path="/home">
+                  {userType() === "recruiter" ? <RecruiterDashboard /> : <Home />}
+                </Route>
                 <Route exact path="/applications"><Applications /></Route>
                 <Route exact path="/saved"><SavedJobs /></Route>
                 <Route exact path="/profile">

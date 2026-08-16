@@ -79,7 +79,7 @@ const Navbar = ({ darkMode, setDarkMode }) => {
         {isAuth() ? (
           userType() === "recruiter" ? (
             <>
-              <Button color="inherit" className={current === "/home" ? classes.activeBtn : classes.navBtn} onClick={() => go("/home")}>Home</Button>
+              <Button color="inherit" className={current === "/home" ? classes.activeBtn : classes.navBtn} onClick={() => go("/home")}>Dashboard</Button>
               <Button color="inherit" className={current === "/addjob" ? classes.activeBtn : classes.navBtn} onClick={() => go("/addjob")}>Post Job</Button>
               <Button color="inherit" className={current === "/myjobs" ? classes.activeBtn : classes.navBtn} onClick={() => go("/myjobs")}>My Jobs</Button>
               <Button color="inherit" className={current === "/employees" ? classes.activeBtn : classes.navBtn} onClick={() => go("/employees")}>Employees</Button>
