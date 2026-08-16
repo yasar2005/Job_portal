@@ -4,7 +4,7 @@ import {
 } from "@material-ui/core";
 import axios from "axios";
 import { Redirect, useHistory } from "react-router-dom";
-import WorkIcon from "@material-ui/icons/Work";
+import BusinessIcon from "@material-ui/icons/Business";
 
 import PasswordInput from "../lib/PasswordInput";
 import EmailInput from "../lib/EmailInput";
@@ -15,7 +15,7 @@ import isAuth from "../lib/isAuth";
 const useStyles = makeStyles(() => ({
   page: {
     minHeight: "100vh",
-    background: "linear-gradient(135deg, #f5f7ff 0%, #e8f0fe 100%)",
+    background: "linear-gradient(135deg, #f0f4ff 0%, #e8f0fe 100%)",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -34,26 +34,19 @@ const useStyles = makeStyles(() => ({
     fontSize: "1rem",
     textTransform: "none",
   },
-  divider: {
-    display: "flex",
-    alignItems: "center",
-    gap: "12px",
-    margin: "8px 0",
-    color: "#bbb",
-    fontSize: "0.85rem",
-  },
-  recruiterBtn: {
-    borderRadius: "20px",
-    padding: "11px",
-    fontWeight: 700,
-    fontSize: "0.95rem",
-    textTransform: "none",
-    borderColor: "#1565c0",
+  badge: {
+    background: "#e8f0fe",
     color: "#1565c0",
+    padding: "4px 12px",
+    borderRadius: "20px",
+    fontSize: "0.78rem",
+    fontWeight: 700,
+    display: "inline-block",
+    marginBottom: "16px",
   },
 }));
 
-const Login = () => {
+const RecruiterLogin = () => {
   const classes = useStyles();
   const history = useHistory();
   const setPopup = useContext(SetPopupContext);
@@ -74,9 +67,13 @@ const Login = () => {
     axios
       .post(apiList.login, loginDetails)
       .then((res) => {
+        if (res.data.type !== "recruiter") {
+          setPopup({ open: true, severity: "error", message: "This account is not a recruiter account. Use applicant login." });
+          return;
+        }
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("type", res.data.type);
-        setPopup({ open: true, severity: "success", message: "Logged in successfully!" });
+        setPopup({ open: true, severity: "success", message: "Welcome back! 👋" });
         history.push("/home");
       })
       .catch((err) => {
@@ -90,19 +87,17 @@ const Login = () => {
     <div className={classes.page}>
       <Paper elevation={4} className={classes.card}>
         <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "4px" }}>
-          <WorkIcon style={{ color: "#1565c0", fontSize: "2rem" }} />
+          <BusinessIcon style={{ color: "#1565c0", fontSize: "2rem" }} />
           <Typography variant="h5" style={{ fontWeight: 800, color: "#1a237e" }}>
-            Welcome Back
+            Recruiter Login
           </Typography>
         </div>
-        <Typography style={{ color: "#888", marginBottom: "24px", fontSize: "0.9rem" }}>
-          Sign in to your applicant account
-        </Typography>
+        <span className={classes.badge}>For Employers & Recruiters</span>
 
         <Grid container direction="column" spacing={2}>
           <Grid item>
             <EmailInput
-              label="Email" value={loginDetails.email} fullWidth
+              label="Work Email" value={loginDetails.email} fullWidth
               onChange={(e) => setLoginDetails({ ...loginDetails, email: e.target.value })}
               inputErrorHandler={inputErrorHandler}
               handleInputError={(key, status, msg) =>
@@ -118,37 +113,23 @@ const Login = () => {
           </Grid>
           <Grid item>
             <Button variant="contained" color="primary" fullWidth
-              className={classes.submitBtn} onClick={handleLogin}
-            >
-              Sign In
-            </Button>
-          </Grid>
-
-          <Grid item>
-            <div className={classes.divider}>
-              <div style={{ flex: 1, height: "1px", background: "#e0e0e0" }} />
-              or
-              <div style={{ flex: 1, height: "1px", background: "#e0e0e0" }} />
-            </div>
-          </Grid>
-
-          <Grid item>
-            <Button variant="outlined" fullWidth className={classes.recruiterBtn}
-              onClick={() => history.push("/recruiter/login")}
+              className={classes.submitBtn}
+              onClick={handleLogin}
             >
               Sign In as Recruiter
             </Button>
           </Grid>
-
           <Grid item style={{ textAlign: "center" }}>
             <Typography style={{ color: "#888", fontSize: "0.9rem" }}>
               No account?{" "}
-              <a href="/signup" style={{ color: "#1565c0", fontWeight: 700, textDecoration: "none" }}>
-                Sign up as Applicant
-              </a>
-              {" · "}
               <a href="/recruiter/signup" style={{ color: "#1565c0", fontWeight: 700, textDecoration: "none" }}>
-                Sign up as Recruiter
+                Register as Recruiter
+              </a>
+            </Typography>
+            <Typography style={{ color: "#888", fontSize: "0.9rem", marginTop: "6px" }}>
+              Are you a job seeker?{" "}
+              <a href="/login" style={{ color: "#1565c0", fontWeight: 700, textDecoration: "none" }}>
+                Applicant Login
               </a>
             </Typography>
           </Grid>
@@ -158,4 +139,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default RecruiterLogin;

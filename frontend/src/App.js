@@ -7,6 +7,9 @@ import Navbar from "./component/Navbar";
 import Login from "./component/Login";
 import Logout from "./component/Logout";
 import Signup from "./component/Signup";
+import ApplicantSignup from "./component/ApplicantSignup";
+import RecruiterSignup from "./component/RecruiterSignup";
+import RecruiterLogin from "./component/RecruiterLogin";
 import Home from "./component/Home";
 import Applications from "./component/Applications";
 import Profile from "./component/Profile";
@@ -60,9 +63,15 @@ function App() {
             <Grid item className={classes.body}>
               <Switch>
                 <Route exact path="/"><Welcome /></Route>
+
+                {/* Auth routes */}
                 <Route exact path="/login"><Login /></Route>
-                <Route exact path="/signup"><Signup /></Route>
                 <Route exact path="/logout"><Logout /></Route>
+                <Route exact path="/signup"><ApplicantSignup /></Route>
+                <Route exact path="/recruiter/login"><RecruiterLogin /></Route>
+                <Route exact path="/recruiter/signup"><RecruiterSignup /></Route>
+
+                {/* Applicant routes */}
                 <Route exact path="/home">
                   {userType() === "recruiter" ? <RecruiterDashboard /> : <Home />}
                 </Route>
@@ -71,10 +80,13 @@ function App() {
                 <Route exact path="/profile">
                   {userType() === "recruiter" ? <RecruiterProfile /> : <Profile />}
                 </Route>
+
+                {/* Recruiter routes */}
                 <Route exact path="/addjob"><CreateJobs /></Route>
                 <Route exact path="/myjobs"><MyJobs /></Route>
                 <Route exact path="/job/applications/:jobId"><JobApplications /></Route>
                 <Route exact path="/employees"><AcceptedApplicants /></Route>
+
                 <Route><ErrorPage /></Route>
               </Switch>
             </Grid>

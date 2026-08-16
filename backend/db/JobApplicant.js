@@ -25,12 +25,12 @@ let schema = new mongoose.Schema(
         },
         endYear: {
           type: Number,
-          max: new Date().getFullYear(),
+          max: new Date().getFullYear() + 10,
           validate: [
             { validator: Number.isInteger, msg: "Year should be an integer" },
             {
               validator: function (value) {
-                return this.startYear <= value;
+                return parseInt(this.startYear) <= parseInt(value);
               },
               msg: "End year should be greater than or equal to Start year",
             },

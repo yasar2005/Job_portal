@@ -97,7 +97,8 @@ const Navbar = ({ darkMode, setDarkMode }) => {
           )
         ) : (
           <>
-            <Button color="inherit" className={classes.navBtn} onClick={() => go("/login")}>Login</Button>
+            <Button color="inherit" className={classes.navBtn} onClick={() => go("/login")}>Applicant Login</Button>
+            <Button color="inherit" className={classes.navBtn} onClick={() => go("/recruiter/login")}>Recruiter Login</Button>
             <Button className={classes.signupBtn} onClick={() => go("/signup")}>Sign Up Free</Button>
           </>
         )}

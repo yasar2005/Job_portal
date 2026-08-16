@@ -205,10 +205,13 @@ const Login = (props) => {
       education: education
         .filter((obj) => obj.institutionName.trim() !== "")
         .map((obj) => {
-          if (obj["endYear"] === "") {
-            delete obj["endYear"];
+          const edu = { ...obj, startYear: parseInt(obj.startYear) };
+          if (obj["endYear"] === "" || obj["endYear"] === null) {
+            delete edu["endYear"];
+          } else {
+            edu.endYear = parseInt(obj.endYear);
           }
-          return obj;
+          return edu;
         }),
     };
 

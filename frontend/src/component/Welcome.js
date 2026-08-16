@@ -140,10 +140,17 @@ const Welcome = () => {
         </Grid>
         <Grid item>
           <Button className={classes.ctaBtn} onClick={() => history.push("/signup")}>
-            Get Started Free
+            Get Started as Applicant
           </Button>
           <Button className={classes.ctaBtnOutline} variant="outlined" onClick={() => history.push("/login")}>
-            Sign In
+            Applicant Login
+          </Button>
+          <Button
+            style={{ marginTop: "12px", borderRadius: "30px", padding: "10px 28px", fontWeight: 700, fontSize: "0.95rem", border: "2px solid #fff", color: "#fff", background: "rgba(255,255,255,0.12)", marginLeft: "12px" }}
+            variant="outlined"
+            onClick={() => history.push("/recruiter/signup")}
+          >
+            Post a Job (Recruiter)
           </Button>
         </Grid>
 
