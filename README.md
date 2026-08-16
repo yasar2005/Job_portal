@@ -12,7 +12,7 @@
 ## 🚀 Live Demo
 
 > **🌐 Live Demo:** [https://job-portal-ebon-seven.vercel.app](https://job-portal-ebon-seven.vercel.app)  
-> **Backend API:** [https://job-portal-api.onrender.com](https://job-portal-api.onrender.com)
+> **Backend API:** [https://job-portal-1-takc.onrender.com](https://job-portal-1-takc.onrender.com)
 
 ---
 
