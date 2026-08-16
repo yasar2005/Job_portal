@@ -107,11 +107,12 @@ const ApplicationTile = ({ application, getData }) => {
   const colors = colorSet[status] || colorSet.applied;
 
   const getResume = () => {
-    if (!application.jobApplicant.resume) {
-      setPopup({ open: true, severity: "error", message: "No resume uploaded by this applicant" });
+    const resumeUrl = application.resume || application.jobApplicant.resume;
+    if (!resumeUrl) {
+      setPopup({ open: true, severity: "error", message: "No resume uploaded for this application" });
       return;
     }
-    const address = `${server}${application.jobApplicant.resume}`;
+    const address = `${server}${resumeUrl}`;
     axios(address, {
       method: "GET",
       responseType: "blob",

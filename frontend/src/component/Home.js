@@ -28,7 +28,8 @@ import WorkIcon from "@material-ui/icons/Work";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
 
-import { SetPopupContext } from "../App";
+import FileUploadInput from "../lib/FileUploadInput";
+import DescriptionIcon from "@material-ui/icons/Description";
 
 import apiList from "../lib/apiList";
 import { userType } from "../lib/isAuth";
@@ -102,20 +103,25 @@ const JobTile = (props) => {
 
   const [open, setOpen] = useState(false);
   const [sop, setSop] = useState("");
+  const [resume, setResume] = useState("");
 
   const handleClose = () => {
     setOpen(false);
     setSop("");
+    setResume("");
   };
 
   const handleApply = () => {
-    console.log(job._id);
-    console.log(sop);
+    if (!resume) {
+      setPopup({ open: true, severity: "error", message: "Please upload your resume before applying" });
+      return;
+    }
     axios
       .post(
         `${apiList.jobs}/${job._id}/applications`,
         {
           sop: sop,
+          resume: resume,
         },
         {
           headers: {
@@ -280,11 +286,28 @@ const JobTile = (props) => {
             alignItems: "center",
           }}
         >
+          <Typography variant="subtitle1" style={{ fontWeight: 600, alignSelf: "flex-start", marginBottom: "8px" }}>
+            Upload Resume <span style={{ color: "#c62828" }}>*</span>
+          </Typography>
+          <div style={{ width: "100%", marginBottom: "20px" }}>
+            <FileUploadInput
+              label="Resume (.pdf)"
+              icon={<DescriptionIcon />}
+              uploadTo={apiList.uploadResume}
+              handleInput={(key, value) => setResume(value)}
+              identifier="resume"
+            />
+          </div>
+          {resume && (
+            <Typography style={{ color: "#2e7d32", fontSize: "0.85rem", alignSelf: "flex-start", marginBottom: "12px" }}>
+              ✓ Resume uploaded successfully
+            </Typography>
+          )}
           <TextField
             label="Write SOP (upto 250 words)"
             multiline
-            rows={8}
-            style={{ width: "100%", marginBottom: "30px" }}
+            rows={6}
+            style={{ width: "100%", marginBottom: "24px" }}
             variant="outlined"
             value={sop}
             onChange={(event) => {
@@ -303,7 +326,7 @@ const JobTile = (props) => {
             style={{ padding: "10px 50px" }}
             onClick={() => handleApply()}
           >
-            Submit
+            Submit Application
           </Button>
         </Paper>
       </Modal>

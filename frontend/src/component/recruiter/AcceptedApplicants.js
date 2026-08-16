@@ -441,36 +441,26 @@ const ApplicationTile = (props) => {
   };
 
   const getResume = () => {
-    if (
-      application.jobApplicant.resume &&
-      application.jobApplicant.resume !== ""
-    ) {
-      const address = `${server}${application.jobApplicant.resume}`;
-      console.log(address);
-      axios(address, {
-        method: "GET",
-        responseType: "blob",
-      })
-        .then((response) => {
-          const file = new Blob([response.data], { type: "application/pdf" });
-          const fileURL = URL.createObjectURL(file);
-          window.open(fileURL);
-        })
-        .catch((error) => {
-          console.log(error);
-          setPopup({
-            open: true,
-            severity: "error",
-            message: "Error",
-          });
-        });
-    } else {
-      setPopup({
-        open: true,
-        severity: "error",
-        message: "No resume found",
-      });
+    const resumeUrl = application.resume || application.jobApplicant.resume;
+    if (!resumeUrl || resumeUrl === "") {
+      setPopup({ open: true, severity: "error", message: "No resume found" });
+      return;
     }
+    const address = `${server}${resumeUrl}`;
+    console.log(address);
+    axios(address, {
+      method: "GET",
+      responseType: "blob",
+    })
+      .then((response) => {
+        const file = new Blob([response.data], { type: "application/pdf" });
+        const fileURL = URL.createObjectURL(file);
+        window.open(fileURL);
+      })
+      .catch((error) => {
+        console.log(error);
+        setPopup({ open: true, severity: "error", message: "Error downloading resume" });
+      });
   };
 
   const updateStatus = (status) => {
