@@ -157,6 +157,7 @@ const JobTile = (props) => {
     });
   };
 
+  const [detailOpen, setDetailOpen] = useState(false);
   const jobTypeBadgeClass = job.jobType === "Full Time" ? classes.fullTime : job.jobType === "Part Time" ? classes.partTime : classes.wfh;
 
   return (
@@ -164,7 +165,13 @@ const JobTile = (props) => {
       <Grid container justify="space-between" alignItems="flex-start">
         <Grid container item xs={10} spacing={1} direction="column">
           <Grid item style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
-            <Typography variant="h6" style={{ fontWeight: 700 }}>{job.title}</Typography>
+            <Typography
+              variant="h6"
+              style={{ fontWeight: 700, cursor: "pointer", color: "#1565c0" }}
+              onClick={() => setDetailOpen(true)}
+            >
+              {job.title}
+            </Typography>
             <span className={`${classes.badge} ${jobTypeBadgeClass}`}>{job.jobType}</span>
           </Grid>
           <Grid item>
@@ -204,6 +211,17 @@ const JobTile = (props) => {
           </Grid>
           <Grid item>
             <Button
+              variant="outlined"
+              color="primary"
+              size="small"
+              style={{ borderRadius: "16px", textTransform: "none", marginBottom: "6px" }}
+              onClick={() => setDetailOpen(true)}
+            >
+              View Details
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button
               variant="contained"
               color="primary"
               className={classes.applyBtn}
@@ -215,6 +233,42 @@ const JobTile = (props) => {
           </Grid>
         </Grid>
       </Grid>
+      {/* Job Detail Modal */}
+      <Modal open={detailOpen} onClose={() => setDetailOpen(false)} className={classes.popupDialog}>
+        <Paper style={{ padding: "36px", outline: "none", minWidth: "480px", maxWidth: "600px", borderRadius: "16px" }}>
+          <Typography variant="h5" style={{ fontWeight: 800, color: "#1a237e", marginBottom: "8px" }}>{job.title}</Typography>
+          <span className={`${classes.badge} ${jobTypeBadgeClass}`}>{job.jobType}</span>
+          <Typography style={{ marginTop: "16px", color: "#555" }}><b>Company:</b> {job.recruiter.name}</Typography>
+          <Typography style={{ color: "#2e7d32", fontWeight: 700, marginTop: "8px" }}>₹{job.salary?.toLocaleString()} / month</Typography>
+          <Typography style={{ marginTop: "8px", color: "#555" }}>
+            <b>Duration:</b> {job.duration !== 0 ? `${job.duration} months` : "Flexible"}
+          </Typography>
+          <Typography style={{ marginTop: "8px", color: "#555" }}>
+            <b>Max Positions:</b> {job.maxApplicants}
+          </Typography>
+          <Typography style={{ marginTop: "8px", color: "#555" }}>
+            <b>Deadline:</b> {deadline}
+          </Typography>
+          <Typography style={{ marginTop: "16px", fontWeight: 700 }}>Required Skills</Typography>
+          <div style={{ marginTop: "6px" }}>
+            {job.skillsets.map((skill) => (
+              <Chip key={skill} label={skill} size="small" style={{ marginRight: "4px", marginBottom: "4px", background: "#e3f2fd", color: "#1565c0", fontWeight: 600 }} />
+            ))}
+          </div>
+          <div style={{ marginTop: "24px", display: "flex", gap: "12px", justifyContent: "flex-end" }}>
+            <Button variant="outlined" onClick={() => setDetailOpen(false)} style={{ borderRadius: "20px", textTransform: "none" }}>Close</Button>
+            <Button
+              variant="contained"
+              color="primary"
+              style={{ borderRadius: "20px", textTransform: "none", fontWeight: 700 }}
+              onClick={() => { setDetailOpen(false); setOpen(true); }}
+              disabled={userType() === "recruiter"}
+            >
+              Apply Now
+            </Button>
+          </div>
+        </Paper>
+      </Modal>
       <Modal open={open} onClose={handleClose} className={classes.popupDialog}>
         <Paper
           style={{
@@ -590,6 +644,7 @@ const FilterPopup = (props) => {
 };
 
 const Home = (props) => {
+  const classes = useStyles();
   const [jobs, setJobs] = useState([]);
   const [filterOpen, setFilterOpen] = useState(false);
   const [searchOptions, setSearchOptions] = useState({

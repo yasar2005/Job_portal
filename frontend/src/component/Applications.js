@@ -24,28 +24,38 @@ import { SetPopupContext } from "../App";
 import apiList from "../lib/apiList";
 
 const useStyles = makeStyles((theme) => ({
-  body: {
-    height: "inherit",
-  },
+  body: { height: "inherit" },
   statusBlock: {
-    width: "100%",
-    height: "100%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
+    padding: "6px 14px",
+    borderRadius: "20px",
+    fontWeight: 700,
+    fontSize: "0.78rem",
     textTransform: "uppercase",
+    display: "inline-block",
+    letterSpacing: "0.5px",
   },
   jobTileOuter: {
-    padding: "30px",
-    margin: "20px 0",
+    padding: "24px",
+    margin: "12px 0",
     boxSizing: "border-box",
     width: "100%",
+    borderRadius: "16px",
+    borderLeft: "4px solid #1565c0",
+    transition: "box-shadow 0.2s",
+    "&:hover": { boxShadow: "0 6px 20px rgba(21,101,192,0.15)" },
   },
   popupDialog: {
     height: "100%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+  },
+  chip: {
+    marginRight: "4px",
+    marginTop: "4px",
+    background: "#e3f2fd",
+    color: "#1565c0",
+    fontWeight: 600,
   },
 }));
 
@@ -130,60 +140,59 @@ const ApplicationTile = (props) => {
   };
 
   return (
-    <Paper className={classes.jobTileOuter} elevation={3}>
-      <Grid container>
+    <Paper className={classes.jobTileOuter} elevation={2}>
+      <Grid container justify="space-between" alignItems="flex-start">
         <Grid container item xs={9} spacing={1} direction="column">
           <Grid item>
-            <Typography variant="h5">{application.job.title}</Typography>
+            <Typography variant="h6" style={{ fontWeight: 700 }}>{application.job.title}</Typography>
           </Grid>
-          <Grid item>Posted By: {application.recruiter.name}</Grid>
-          <Grid item>Role : {application.job.jobType}</Grid>
-          <Grid item>Salary : &#8377; {application.job.salary} per month</Grid>
           <Grid item>
-            Duration :{" "}
-            {application.job.duration !== 0
-              ? `${application.job.duration} month`
-              : `Flexible`}
+            <Typography style={{ color: "#555", fontSize: "0.9rem" }}>
+              {application.recruiter.name} &bull; {application.job.jobType}
+            </Typography>
+          </Grid>
+          <Grid item>
+            <Typography style={{ color: "#2e7d32", fontWeight: 700 }}>&#8377;{application.job.salary?.toLocaleString()} / month</Typography>
+          </Grid>
+          <Grid item>
+            <Typography style={{ color: "#666", fontSize: "0.85rem" }}>
+              Duration: {application.job.duration !== 0 ? `${application.job.duration} months` : "Flexible"}
+            </Typography>
           </Grid>
           <Grid item>
             {application.job.skillsets.map((skill) => (
-              <Chip label={skill} style={{ marginRight: "2px" }} />
+              <Chip key={skill} label={skill} size="small" className={classes.chip} />
             ))}
           </Grid>
-          <Grid item>Applied On: {appliedOn.toLocaleDateString()}</Grid>
-          {application.status === "accepted" ||
-          application.status === "finished" ? (
-            <Grid item>Joined On: {joinedOn.toLocaleDateString()}</Grid>
-          ) : null}
+          <Grid item>
+            <Typography style={{ color: "#888", fontSize: "0.82rem", marginTop: "6px" }}>Applied: {appliedOn.toLocaleDateString()}</Typography>
+            {(application.status === "accepted" || application.status === "finished") && (
+              <Typography style={{ color: "#888", fontSize: "0.82rem" }}>Joined: {joinedOn.toLocaleDateString()}</Typography>
+            )}
+          </Grid>
         </Grid>
-        <Grid item container direction="column" xs={3}>
-          <Grid item xs>
-            <Paper
+        <Grid item container direction="column" xs={3} alignItems="flex-end" spacing={1}>
+          <Grid item>
+            <span
               className={classes.statusBlock}
-              style={{
-                background: colorSet[application.status],
-                color: "#ffffff",
-              }}
+              style={{ background: colorSet[application.status] + "22", color: colorSet[application.status], border: `1px solid ${colorSet[application.status]}` }}
             >
               {application.status}
-            </Paper>
+            </span>
           </Grid>
-          {application.status === "accepted" ||
-          application.status === "finished" ? (
+          {(application.status === "accepted" || application.status === "finished") && (
             <Grid item>
               <Button
-                variant="contained"
+                variant="outlined"
                 color="primary"
-                className={classes.statusBlock}
-                onClick={() => {
-                  fetchRating();
-                  setOpen(true);
-                }}
+                size="small"
+                style={{ borderRadius: "20px", textTransform: "none", marginTop: "8px" }}
+                onClick={() => { fetchRating(); setOpen(true); }}
               >
-                Rate Job
+                ⭐ Rate Job
               </Button>
             </Grid>
-          ) : null}
+          )}
         </Grid>
       </Grid>
       <Modal open={open} onClose={handleClose} className={classes.popupDialog}>
@@ -256,30 +265,25 @@ const Applications = (props) => {
       item
       direction="column"
       alignItems="center"
-      style={{ padding: "30px", minHeight: "93vh" }}
+      style={{ padding: "30px", minHeight: "93vh", maxWidth: "900px", margin: "0 auto", width: "100%" }}
     >
-      <Grid item>
-        <Typography variant="h2">Applications</Typography>
+      <Grid item style={{ width: "100%", marginBottom: "16px" }}>
+        <Typography variant="h4" style={{ fontWeight: 700 }}>My Applications</Typography>
+        <Typography style={{ color: "#888" }}>{applications.length} application{applications.length !== 1 ? "s" : ""} submitted</Typography>
       </Grid>
-      <Grid
-        container
-        item
-        xs
-        direction="column"
-        style={{ width: "100%" }}
-        alignItems="stretch"
-        justify="center"
-      >
+      <Grid container item xs direction="column" style={{ width: "100%" }} alignItems="stretch">
         {applications.length > 0 ? (
           applications.map((obj) => (
-            <Grid item>
+            <Grid item key={obj._id}>
               <ApplicationTile application={obj} />
             </Grid>
           ))
         ) : (
-          <Typography variant="h5" style={{ textAlign: "center" }}>
-            No Applications Found
-          </Typography>
+          <div style={{ textAlign: "center", padding: "60px 20px", color: "#888" }}>
+            <Typography variant="h6">No applications yet</Typography>
+            <Typography style={{ marginTop: "8px" }}>Browse jobs and start applying!</Typography>
+            <Button variant="contained" color="primary" href="/home" style={{ marginTop: "20px", borderRadius: "20px", textTransform: "none" }}>Browse Jobs</Button>
+          </div>
         )}
       </Grid>
     </Grid>
