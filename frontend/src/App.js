@@ -6,7 +6,6 @@ import Welcome, { ErrorPage } from "./component/Welcome";
 import Navbar from "./component/Navbar";
 import Login from "./component/Login";
 import Logout from "./component/Logout";
-import Signup from "./component/Signup";
 import ApplicantSignup from "./component/ApplicantSignup";
 import RecruiterSignup from "./component/RecruiterSignup";
 import RecruiterLogin from "./component/RecruiterLogin";
@@ -21,7 +20,7 @@ import RecruiterProfile from "./component/recruiter/Profile";
 import RecruiterDashboard from "./component/recruiter/Dashboard";
 import SavedJobs from "./component/SavedJobs";
 import MessagePopup from "./lib/MessagePopup";
-import isAuth, { userType } from "./lib/isAuth";
+import { userType } from "./lib/isAuth";
 
 const useStyles = makeStyles(() => ({
   body: {

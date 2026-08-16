@@ -1,9 +1,8 @@
 import { useEffect, useContext } from "react";
 import { Redirect } from "react-router-dom";
-
 import { SetPopupContext } from "../App";
 
-const Logout = (props) => {
+const Logout = () => {
   const setPopup = useContext(SetPopupContext);
   useEffect(() => {
     localStorage.removeItem("token");
@@ -13,7 +12,7 @@ const Logout = (props) => {
       severity: "success",
       message: "Logged out successfully",
     });
-  }, []);
+  }, [setPopup]);
   return <Redirect to="/login" />;
 };
 

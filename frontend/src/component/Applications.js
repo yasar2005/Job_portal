@@ -1,20 +1,12 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useCallback } from "react";
 import {
   Button,
   Chip,
   Grid,
-  IconButton,
-  InputAdornment,
   makeStyles,
   Paper,
-  TextField,
   Typography,
   Modal,
-  Slider,
-  FormControlLabel,
-  FormGroup,
-  MenuItem,
-  Checkbox,
 } from "@material-ui/core";
 import Rating from "@material-ui/lab/Rating";
 import axios from "axios";
@@ -233,11 +225,7 @@ const Applications = (props) => {
   const setPopup = useContext(SetPopupContext);
   const [applications, setApplications] = useState([]);
 
-  useEffect(() => {
-    getData();
-  }, []);
-
-  const getData = () => {
+  const getData = useCallback(() => {
     axios
       .get(apiList.applications, {
         headers: {
@@ -245,11 +233,9 @@ const Applications = (props) => {
         },
       })
       .then((response) => {
-        console.log(response.data);
         setApplications(response.data);
       })
       .catch((err) => {
-        // console.log(err.response);
         console.log(err.response.data);
         setPopup({
           open: true,
@@ -257,7 +243,11 @@ const Applications = (props) => {
           message: "Error",
         });
       });
-  };
+  }, [setPopup]);
+
+  useEffect(() => {
+    getData();
+  }, [getData]);
 
   return (
     <Grid

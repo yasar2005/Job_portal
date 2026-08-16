@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useCallback } from "react";
 import {
   Button,
   Chip,
@@ -15,7 +15,6 @@ import {
   MenuItem,
   Checkbox,
   Tooltip,
-  Badge,
 } from "@material-ui/core";
 import Rating from "@material-ui/lab/Rating";
 import axios from "axios";
@@ -673,11 +672,8 @@ const Home = (props) => {
   });
 
   const setPopup = useContext(SetPopupContext);
-  useEffect(() => {
-    getData();
-  }, []);
 
-  const getData = () => {
+  const getData = useCallback(() => {
     let searchParams = [];
     if (searchOptions.query !== "") {
       searchParams = [...searchParams, `q=${searchOptions.query}`];
@@ -691,19 +687,19 @@ const Home = (props) => {
     if (searchOptions.jobType.wfh) {
       searchParams = [...searchParams, `jobType=Work%20From%20Home`];
     }
-    if (searchOptions.salary[0] != 0) {
+    if (searchOptions.salary[0] !== 0) {
       searchParams = [
         ...searchParams,
         `salaryMin=${searchOptions.salary[0] * 1000}`,
       ];
     }
-    if (searchOptions.salary[1] != 100) {
+    if (searchOptions.salary[1] !== 100) {
       searchParams = [
         ...searchParams,
         `salaryMax=${searchOptions.salary[1] * 1000}`,
       ];
     }
-    if (searchOptions.duration != "0") {
+    if (searchOptions.duration !== "0") {
       searchParams = [...searchParams, `duration=${searchOptions.duration}`];
     }
 
@@ -752,7 +748,11 @@ const Home = (props) => {
           message: "Error",
         });
       });
-  };
+  }, [searchOptions, setPopup]);
+
+  useEffect(() => {
+    getData();
+  }, [getData]);
 
   return (
     <>

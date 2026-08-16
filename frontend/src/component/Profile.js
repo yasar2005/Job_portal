@@ -1,9 +1,8 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useCallback } from "react";
 import {
   Button,
   Grid,
   Typography,
-  Modal,
   Paper,
   makeStyles,
   TextField,
@@ -106,8 +105,6 @@ const MultifieldInput = (props) => {
 const Profile = (props) => {
   const classes = useStyles();
   const setPopup = useContext(SetPopupContext);
-  const [userData, setUserData] = useState();
-  const [open, setOpen] = useState(false);
 
   const [profileDetails, setProfileDetails] = useState({
     name: "",
@@ -136,7 +133,7 @@ const Profile = (props) => {
     getData();
   }, []);
 
-  const getData = () => {
+  const getData = useCallback(() => {
     axios
       .get(apiList.user, {
         headers: {
@@ -164,15 +161,11 @@ const Profile = (props) => {
           message: "Error",
         });
       });
-  };
+  }, [setPopup]);
 
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const editDetails = () => {
-    setOpen(true);
-  };
+  useEffect(() => {
+    getData();
+  }, [getData]);
 
   const handleUpdate = () => {
     console.log(education);

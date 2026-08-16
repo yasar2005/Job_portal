@@ -8,7 +8,6 @@ import {
   Paper,
   Typography,
   Modal,
-  FormControlLabel,
   Checkbox,
   Avatar,
 } from "@material-ui/core";

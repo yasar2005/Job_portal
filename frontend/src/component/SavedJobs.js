@@ -93,7 +93,7 @@ const SavedJobs = () => {
         setPopup({ open: true, severity: "error", message: "Failed to load saved jobs" });
       })
       .finally(() => setLoading(false));
-  }, []);
+  }, [setPopup]);
 
   return (
     <Grid container direction="column" className={classes.container}>
