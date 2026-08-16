@@ -28,8 +28,6 @@ import WorkIcon from "@material-ui/icons/Work";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
 
-import FileUploadInput from "../lib/FileUploadInput";
-import DescriptionIcon from "@material-ui/icons/Description";
 import { SetPopupContext } from "../App";
 
 import apiList from "../lib/apiList";
@@ -278,7 +276,7 @@ const JobTile = (props) => {
       <Modal open={open} onClose={handleClose} className={classes.popupDialog}>
         <Paper
           style={{
-            padding: "20px",
+            padding: "30px",
             outline: "none",
             display: "flex",
             flexDirection: "column",
@@ -287,28 +285,56 @@ const JobTile = (props) => {
             alignItems: "center",
           }}
         >
-          <Typography variant="subtitle1" style={{ fontWeight: 600, alignSelf: "flex-start", marginBottom: "8px" }}>
-            Upload Resume <span style={{ color: "#c62828" }}>*</span>
+          <Typography variant="h6" style={{ fontWeight: 700, marginBottom: "16px", alignSelf: "flex-start" }}>
+            Apply for {job.title}
           </Typography>
-          <div style={{ width: "100%", marginBottom: "20px" }}>
-            <FileUploadInput
-              label="Resume (.pdf)"
-              icon={<DescriptionIcon />}
-              uploadTo={apiList.uploadResume}
-              handleInput={(key, value) => setResume(value)}
-              identifier="resume"
-            />
+
+          <Typography style={{ fontWeight: 600, alignSelf: "flex-start", marginBottom: "6px", fontSize: "0.9rem" }}>
+            Resume <span style={{ color: "#c62828" }}>*</span>
+          </Typography>
+          <div style={{ width: "100%", marginBottom: "8px", display: "flex", alignItems: "center", gap: "12px" }}>
+            <Button variant="outlined" color="primary" component="label" style={{ borderRadius: "20px", textTransform: "none", whiteSpace: "nowrap" }}>
+              📎 Choose PDF
+              <input
+                type="file"
+                accept=".pdf"
+                style={{ display: "none" }}
+                onChange={(event) => {
+                  const selectedFile = event.target.files[0];
+                  if (!selectedFile) return;
+                  const formData = new FormData();
+                  formData.append("file", selectedFile);
+                  setResume("uploading");
+                  axios.post(apiList.uploadResume, formData, {
+                    headers: { "Content-Type": "multipart/form-data" },
+                  })
+                    .then((res) => {
+                      setResume(res.data.url);
+                      setPopup({ open: true, severity: "success", message: "Resume uploaded!" });
+                    })
+                    .catch(() => {
+                      setResume("");
+                      setPopup({ open: true, severity: "error", message: "Resume upload failed. Try again." });
+                    });
+                }}
+              />
+            </Button>
+            {resume === "uploading" && (
+              <Typography style={{ color: "#888", fontSize: "0.85rem" }}>Uploading...</Typography>
+            )}
+            {resume && resume !== "uploading" && (
+              <Typography style={{ color: "#2e7d32", fontSize: "0.85rem", fontWeight: 600 }}>✓ Resume uploaded</Typography>
+            )}
+            {!resume && (
+              <Typography style={{ color: "#888", fontSize: "0.85rem" }}>No file chosen</Typography>
+            )}
           </div>
-          {resume && (
-            <Typography style={{ color: "#2e7d32", fontSize: "0.85rem", alignSelf: "flex-start", marginBottom: "12px" }}>
-              ✓ Resume uploaded successfully
-            </Typography>
-          )}
+
           <TextField
-            label="Write SOP (upto 250 words)"
+            label="Statement of Purpose (optional, upto 250 words)"
             multiline
             rows={6}
-            style={{ width: "100%", marginBottom: "24px" }}
+            style={{ width: "100%", marginBottom: "24px", marginTop: "12px" }}
             variant="outlined"
             value={sop}
             onChange={(event) => {
@@ -324,8 +350,9 @@ const JobTile = (props) => {
           <Button
             variant="contained"
             color="primary"
-            style={{ padding: "10px 50px" }}
+            style={{ padding: "10px 50px", borderRadius: "20px" }}
             onClick={() => handleApply()}
+            disabled={resume === "uploading"}
           >
             Submit Application
           </Button>
