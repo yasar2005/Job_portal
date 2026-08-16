@@ -446,21 +446,12 @@ const ApplicationTile = (props) => {
       setPopup({ open: true, severity: "error", message: "No resume found" });
       return;
     }
-    const address = `${server}${resumeUrl}`;
-    console.log(address);
-    axios(address, {
-      method: "GET",
-      responseType: "blob",
-    })
-      .then((response) => {
-        const file = new Blob([response.data], { type: "application/pdf" });
-        const fileURL = URL.createObjectURL(file);
-        window.open(fileURL);
-      })
-      .catch((error) => {
-        console.log(error);
-        setPopup({ open: true, severity: "error", message: "Error downloading resume" });
-      });
+    if (resumeUrl.startsWith("data:")) {
+      const win = window.open();
+      win.document.write(`<iframe src="${resumeUrl}" width="100%" height="100%" style="border:none"></iframe>`);
+      return;
+    }
+    window.open(`${server}${resumeUrl}`, "_blank");
   };
 
   const updateStatus = (status) => {

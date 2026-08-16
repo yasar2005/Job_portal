@@ -112,21 +112,12 @@ const ApplicationTile = ({ application, getData }) => {
       setPopup({ open: true, severity: "error", message: "No resume uploaded for this application" });
       return;
     }
-    const address = `${server}${resumeUrl}`;
-    axios(address, {
-      method: "GET",
-      responseType: "blob",
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-    })
-      .then((response) => {
-        const file = new Blob([response.data], { type: "application/pdf" });
-        const fileURL = URL.createObjectURL(file);
-        window.open(fileURL);
-      })
-      .catch(() => {
-        // fallback: open directly
-        window.open(address, "_blank");
-      });
+    if (resumeUrl.startsWith("data:")) {
+      const win = window.open();
+      win.document.write(`<iframe src="${resumeUrl}" width="100%" height="100%" style="border:none"></iframe>`);
+      return;
+    }
+    window.open(`${server}${resumeUrl}`, "_blank");
   };
 
   const updateStatus = (newStatus) => {
