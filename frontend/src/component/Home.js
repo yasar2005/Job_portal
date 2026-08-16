@@ -111,16 +111,12 @@ const JobTile = (props) => {
   };
 
   const handleApply = () => {
-    if (!resume) {
-      setPopup({ open: true, severity: "error", message: "Please upload your resume before applying" });
-      return;
-    }
     axios
       .post(
         `${apiList.jobs}/${job._id}/applications`,
         {
           sop: sop,
-          resume: resume,
+          resume: resume || "",
         },
         {
           headers: {

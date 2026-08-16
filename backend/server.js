@@ -31,8 +31,8 @@ if (!fs.existsSync("./public/profile")) {
 const app = express();
 const port = process.env.PORT || 4444;
 
-app.use(bodyParser.json()); // support json encoded bodies
-app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
+app.use(bodyParser.json({ limit: "10mb" })); // support json encoded bodies
+app.use(bodyParser.urlencoded({ extended: true, limit: "10mb" })); // support encoded bodies
 
 // Setting up middlewares
 app.use(cors());
