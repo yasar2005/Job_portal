@@ -3,7 +3,7 @@ const multer = require("multer");
 const path = require("path");
 
 const router = express.Router();
-const upload = multer();
+const upload = multer({ storage: multer.memoryStorage() });
 
 router.post("/resume", upload.single("file"), (req, res) => {
   const { file } = req;
