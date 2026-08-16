@@ -11,8 +11,8 @@
 
 ## 🚀 Live Demo
 
-> **Frontend:** [https://job-portal-yasar.vercel.app](https://job-portal-yasar.vercel.app) *(deploy to update)*  
-> **Backend API:** [https://job-portal-api.onrender.com](https://job-portal-api.onrender.com) *(deploy to update)*
+> **🌐 Live Demo:** [https://job-portal-ebon-seven.vercel.app](https://job-portal-ebon-seven.vercel.app)  
+> **Backend API:** [https://job-portal-api.onrender.com](https://job-portal-api.onrender.com)
 
 ---
 
