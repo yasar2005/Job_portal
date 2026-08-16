@@ -129,10 +129,6 @@ const Profile = (props) => {
     });
   };
 
-  useEffect(() => {
-    getData();
-  }, []);
-
   const getData = useCallback(() => {
     axios
       .get(apiList.user, {
@@ -204,7 +200,6 @@ const Profile = (props) => {
         });
         console.log(err.response);
       });
-    setOpen(false);
   };
 
   return (
