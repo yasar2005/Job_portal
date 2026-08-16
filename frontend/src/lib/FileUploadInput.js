@@ -20,6 +20,7 @@ const FileUploadInput = (props) => {
     Axios.post(uploadTo, data, {
       headers: {
         "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
       onUploadProgress: (progressEvent) => {
         setUploadPercentage(

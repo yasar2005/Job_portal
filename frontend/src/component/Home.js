@@ -30,6 +30,7 @@ import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
 
 import FileUploadInput from "../lib/FileUploadInput";
 import DescriptionIcon from "@material-ui/icons/Description";
+import { SetPopupContext } from "../App";
 
 import apiList from "../lib/apiList";
 import { userType } from "../lib/isAuth";
