@@ -47,10 +47,6 @@ const Profile = (props) => {
     });
   };
 
-  useEffect(() => {
-    getData();
-  }, []);
-
   const getData = useCallback(() => {
     axios
       .get(apiList.user, {
