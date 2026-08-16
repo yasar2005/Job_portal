@@ -5,7 +5,6 @@ import {
 } from "@material-ui/core";
 import axios from "axios";
 import { Redirect, useHistory } from "react-router-dom";
-import ChipInput from "material-ui-chip-input";
 import DescriptionIcon from "@material-ui/icons/Description";
 import FaceIcon from "@material-ui/icons/Face";
 import AddIcon from "@material-ui/icons/Add";
@@ -84,6 +83,8 @@ const ApplicantSignup = () => {
   const [errors, setErrors] = useState({
     name: "", email: "", password: "",
   });
+
+  const [skillInput, setSkillInput] = useState("");
 
   const currentYear = new Date().getFullYear();
 
@@ -249,11 +250,47 @@ const ApplicantSignup = () => {
             <Typography className={classes.sectionLabel}>Skills</Typography>
           </Grid>
           <Grid item>
-            <ChipInput
-              label="Skills" variant="outlined" fullWidth
-              helperText="Press Enter to add each skill"
-              onChange={(chips) => setDetails({ ...details, skills: chips })}
-            />
+            <Grid container spacing={1} alignItems="center">
+              <Grid item xs>
+                <TextField
+                  label="Add a skill" variant="outlined" fullWidth size="small"
+                  value={skillInput}
+                  onChange={(e) => setSkillInput(e.target.value)}
+                  onKeyPress={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      const s = skillInput.trim();
+                      if (s && !details.skills.includes(s)) setDetails({ ...details, skills: [...details.skills, s] });
+                      setSkillInput("");
+                    }
+                  }}
+                  placeholder="e.g. React, Python"
+                  helperText="Press Enter to add each skill"
+                />
+              </Grid>
+              <Grid item>
+                <IconButton
+                  color="primary"
+                  style={{ background: "#1565c0", color: "#fff", borderRadius: "10px" }}
+                  onClick={() => {
+                    const s = skillInput.trim();
+                    if (s && !details.skills.includes(s)) setDetails({ ...details, skills: [...details.skills, s] });
+                    setSkillInput("");
+                  }}
+                >
+                  <AddIcon />
+                </IconButton>
+              </Grid>
+            </Grid>
+            <div style={{ marginTop: "8px" }}>
+              {details.skills.map((skill) => (
+                <Chip
+                  key={skill} label={skill} size="small"
+                  onDelete={() => setDetails({ ...details, skills: details.skills.filter((s) => s !== skill) })}
+                  style={{ marginRight: "4px", marginBottom: "4px", background: "#e3f2fd", color: "#1565c0", fontWeight: 600 }}
+                />
+              ))}
+            </div>
           </Grid>
 
           {/* Files */}
